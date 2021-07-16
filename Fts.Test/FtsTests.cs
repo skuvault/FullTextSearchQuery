@@ -37,6 +37,133 @@ namespace Fts.Test
         }
 
         [TestMethod]
+        public void WordsJoinedWithOr_WhenSettingTurnedOn()
+        {
+            var query = new FtsQuery(new FtsQuerySettings {DefaultConjunction = ConjunctionType.Or});
+
+            var actual = query.Transform("\"dk product\" dkp dkp123");
+
+            const string expected = "\"dk product\" OR FORMSOF(INFLECTIONAL, dkp) OR FORMSOF(INFLECTIONAL, dkp123)";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TrailingWildcardAddedToWords_WhenSettingTurnedOn()
+        {
+            var query = new FtsQuery(new FtsQuerySettings {UseTrailingWildcardForAllWords = true});
+
+            var actual = query.Transform("\"dk product\" dkp dkp123");
+
+            const string expected = "\"dk product\" AND \"dkp*\" AND \"dkp123*\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void InflectionalSearchIsNotUsed_WhenDefaultTermFormIsLiteral()
+        {
+            var query = new FtsQuery(new FtsQuerySettings {DefaultTermForm = TermForm.Literal});
+
+            Assert.AreEqual("\"abc\"", query.Transform("abc"));
+
+            Assert.AreEqual("\"def\" AND NOT \"abc\"", query.Transform("-abc def"));
+
+            Assert.AreEqual("\"abc\" AND \"def\"", query.Transform("abc def"));
+
+            Assert.AreEqual("\"abc\" AND (\"def\" OR \"ghi\")", query.Transform("abc and (def or ghi)"));
+        }
+
+        [TestMethod]
+        public void HyphenIsNotParsedAsPunctuation_WhenHyphenIsDisabled()
+        {
+            var query = new FtsQuery(new FtsQuerySettings {DisabledPunctuation = new[] {'-'}});
+
+            var actual = query.Transform("t-shirt");
+
+            const string expected = "FORMSOF(INFLECTIONAL, t-shirt)";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TildeIsNotParsedAsPunctuation_WhenTildeIsDisabled()
+        {
+            var query = new FtsQuery(new FtsQuerySettings {DisabledPunctuation = new[] {'~'}});
+
+            var actual = query.Transform("~abc");
+
+            const string expected = "FORMSOF(INFLECTIONAL, ~abc)";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void NearIsNotParsedAsPunctuation_WhenSingleAngleQuotationMarks_andPlusAreDisabled()
+        {
+            var query = new FtsQuery(new FtsQuerySettings {DisabledPunctuation = new[] {'<','>', '+'}});
+
+            var actual = query.Transform("<+abc +def>");
+
+            const string expected = "FORMSOF(INFLECTIONAL, <+abc) AND FORMSOF(INFLECTIONAL, +def>)";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void NearIsNotParsedAsPunctuation_WhenItsDisabledInSettings()
+        {
+            var query = new FtsQuery(new FtsQuerySettings {DisableNear = true});
+
+            var actual = query.Transform("\"abc\" NEAR \"def\"");
+
+            const string expected = "\"abc\" AND FORMSOF(INFLECTIONAL, NEAR) AND \"def\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TrailingWildcardAddedToWords_WhenDefaultTermFormIsLiteral_andTrailingWildcardEnabled()
+        {
+            var query = new FtsQuery(new FtsQuerySettings
+            {
+                DefaultTermForm = TermForm.Literal,
+                UseTrailingWildcardForAllWords = true
+            });
+
+            var actual = query.Transform("abc* def*");
+
+            const string expected = "\"abc*\" AND \"def*\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void WordsJoinedWithOr_andUsedTrailingWildcard_WhenBothSettingsTurnedOn()
+        {
+            var query = new FtsQuery(new FtsQuerySettings
+            {
+                DefaultConjunction = ConjunctionType.Or,
+                UseTrailingWildcardForAllWords = true
+            });
+
+            var actual = query.Transform("\"dk product\" dkp dkp123");
+
+            const string expected = "\"dk product\" OR \"dkp*\" OR \"dkp123*\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TrailingWildcardAddedToAllWords_andPunctuationSkipped()
+        {
+            var query = new FtsQuery(new FtsQuerySettings
+            {
+                DefaultConjunction = ConjunctionType.And,
+                DefaultTermForm = TermForm.Literal,
+                UseTrailingWildcardForAllWords = true,
+                DisabledPunctuation = new[] {'~', '-', '+', '<', '>'}
+            });
+
+            var actual = query.Transform("\"dk product\" dkp <+dkp+123+> -ab-c ~def");
+
+            const string expected = "\"dk product\" AND \"dkp*\" AND \"<+dkp+123+>*\" AND \"-ab-c*\" AND \"~def*\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void FixupTests()
         {
             FtsQuery query = new FtsQuery(true);
@@ -62,6 +189,19 @@ namespace Fts.Test
             Assert.AreEqual(0, query.StopWords.Count);
             query = new FtsQuery(true);
             Assert.AreNotEqual(0, query.StopWords.Count);
+        }
+        
+        [TestMethod]
+        public void AdditionalStopwordsTests()
+        {
+            var additionalStopWords = new[] {"aa", "bb", "cc"};
+
+            var query = new FtsQuery(new FtsQuerySettings {AdditionalStopWords = additionalStopWords});
+            Assert.AreEqual(3, query.StopWords.Count);
+
+            query = new FtsQuery(new FtsQuerySettings
+                {AddStandardStopWords = true, AdditionalStopWords = additionalStopWords});
+            Assert.IsTrue(query.StopWords.Count > 3, "Expected actualCount to be greater than 3.");
         }
     }
 }
