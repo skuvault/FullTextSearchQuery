@@ -1,29 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net461;net5.0;netstandard2.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
     <Nullable Condition="'$(TargetFramework)' == 'net5.0'">enable</Nullable>
     <LangVersion>9.0</LangVersion>
-    <PackageId>SoftCircuits.FullTextSearchQuery</PackageId>
+    <PackageId>SkuVault.FullTextSearchQuery</PackageId>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Jonathan Wood</Authors>
-    <Company>SoftCircuits</Company>
-    <Copyright>Copyright © 2019-2021 SoftCircuits</Copyright>
+    <Authors>SkuVault</Authors>
+    <Company>SkuVault</Company>
+    <Copyright>Copyright © 2019-2021 SoftCircuits   Copyright © 2021-2021 SkuVault</Copyright>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
     <PackageTags>full-text-search full-text full text search query fulltext sql-server</PackageTags>
-    <PackageReleaseNotes>Now targeting .NET Standard 2.0 or .NET 5.0 and supports nullable reference types; Added unit tests.</PackageReleaseNotes>
+    <PackageReleaseNotes>Now targeting .NET Framework 4.6.1, .NET Standard 2.0 or .NET 5.0, and supports nullable reference types.
+Added settings to customize library.
+Added unit tests.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RepositoryType>git</RepositoryType>
     <Description>Full Text Search Query is a .NET class library that converts a user-friendly search term into a valid Microsoft SQL Server full-text-search query. The code attempts to gracefully handle all syntax cases that would cause SQL Server to generate an error.
-
-Now targeting .NET Standard 2.0 or .NET 5.0, and supports nullable reference types.</Description>
-    <PackageProjectUrl>https://github.com/SoftCircuits/FullTextSearchQuery</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/SoftCircuits/FullTextSearchQuery</RepositoryUrl>
-    <Version>2.0.0</Version>
+This package was created based on SoftCircuits.FullTextSearchQuery library to be able to pass settings and support .NET Framework 4.6.1.</Description>
+    <PackageProjectUrl>https://github.com/SkuVault/FullTextSearchQuery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SkuVault/FullTextSearchQuery</RepositoryUrl>
     <PackageIcon>Logo_64x64.png</PackageIcon>
     <PackageIconUrl />
+    <PackageVersion>1.0.2</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,11 +32,11 @@ Now targeting .NET Standard 2.0 or .NET 5.0, and supports nullable reference typ
     <None Remove="ve-FE62.tmp" />
     <None Include="..\License.txt">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>$(PackageLicenseFile)</PackagePath>
     </None>
     <None Include="..\Logo_64x64.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>$(PackageIcon)</PackagePath>
     </None>
   </ItemGroup>
 
