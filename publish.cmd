@@ -1,6 +1,6 @@
 @echo off
 IF %1.==. GOTO No1
-set API_KEY=%2
+set API_KEY=%1
 
 cd FullTextSearchQuery
 dotnet clean FullTextSearchQuery.csproj -c Release
