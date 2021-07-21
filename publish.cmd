@@ -1,21 +1,21 @@
 @echo off
 IF %1.==. GOTO No1
-IF %2.==. GOTO No1
-
-set PACKAGE_VERSION=%1
 set API_KEY=%2
 
-dotnet build FullTextSearchQuery/FullTextSearchQuery.csproj -c Release
+cd FullTextSearchQuery
+dotnet clean FullTextSearchQuery.csproj -c Release
+dotnet build FullTextSearchQuery.csproj -c Release
 echo --- package built
 
-dotnet nuget push "FullTextSearchQuery/bin/Release/SkuVault.FullTextSearchQuery."%PACKAGE_VERSION%".nupkg"  --api-key %API_KEY% --source "https://nuget.pkg.github.com/skuvault/index.json"
+cd bin/Release
+dotnet nuget push *.nupkg  --api-key %API_KEY% --source "https://nuget.pkg.github.com/skuvault/index.json"
 echo --- package published
 
 PAUSE
 GOTO End1
 
 :No1
-	echo Enter package version as the first parameter and GitHub personal access token (PAT) as the second parameter.
+	echo Enter GitHub personal access token (PAT) as a parameter.
 	pause
 GOTO End1
 
