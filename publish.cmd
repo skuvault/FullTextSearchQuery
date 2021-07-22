@@ -4,10 +4,12 @@ set API_KEY=%1
 
 cd FullTextSearchQuery
 dotnet clean FullTextSearchQuery.csproj -c Release
+del /S /Q bin\Release\*
+
 dotnet build FullTextSearchQuery.csproj -c Release
 echo --- package built
 
-cd bin/Release
+cd bin\Release
 dotnet nuget push *.nupkg  --api-key %API_KEY% --source "https://nuget.pkg.github.com/skuvault/index.json"
 echo --- package published
 
