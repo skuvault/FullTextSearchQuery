@@ -219,11 +219,9 @@ namespace SoftCircuits.FullTextSearchQuery
                         term += parser.Peek();
                         parser.MoveAhead();
                         termForm = TermForm.Literal;
-                    }
-                    else if (_settings.UseTrailingWildcardForAllWords)
-                    {
-                        term += '*';
-                        termForm = TermForm.Literal;
+                        root = AddNode(root, term, termForm, termExclude, conjunction);
+                        resetState = true;
+                        continue;
                     }
 
                     // Interpret term
@@ -236,6 +234,13 @@ namespace SoftCircuits.FullTextSearchQuery
                         conjunction = ConjunctionType.Near;
                     else if (comparer.Compare(term, "NOT") == 0)
                         termExclude = true;
+                    else if (_settings.UseTrailingWildcardForAllWords)
+                    {
+                        term += '*';
+                        termForm = TermForm.Literal;
+                        root = AddNode(root, term, termForm, termExclude, conjunction);
+                        resetState = true;
+                    }
                     else
                     {
                         root = AddNode(root, term, termForm, termExclude, conjunction);

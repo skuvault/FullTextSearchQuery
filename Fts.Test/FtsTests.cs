@@ -125,9 +125,54 @@ namespace Fts.Test
                 UseTrailingWildcardForAllWords = true
             });
 
-            var actual = query.Transform("abc* def*");
+            var actual = query.Transform("abc def ghi*");
+
+            const string expected = "\"abc*\" AND \"def*\" AND \"ghi*\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TrailingWildcardIsNotAddedToAnd_WhenDefaultTermFormIsLiteral_andTrailingWildcardEnabled()
+        {
+            var query = new FtsQuery(new FtsQuerySettings
+            {
+                DefaultTermForm = TermForm.Literal,
+                UseTrailingWildcardForAllWords = true
+            });
+
+            var actual = query.Transform("abc AND def");
 
             const string expected = "\"abc*\" AND \"def*\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TrailingWildcardIsNotAddedToOr_WhenDefaultTermFormIsLiteral_andTrailingWildcardEnabled()
+        {
+            var query = new FtsQuery(new FtsQuerySettings
+            {
+                DefaultTermForm = TermForm.Literal,
+                UseTrailingWildcardForAllWords = true
+            });
+
+            var actual = query.Transform("abc OR def");
+
+            const string expected = "\"abc*\" OR \"def*\"";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TrailingWildcardIsNotAddedToAndOr_WhenDefaultTermFormIsLiteral_andTrailingWildcardEnabled()
+        {
+            var query = new FtsQuery(new FtsQuerySettings
+            {
+                DefaultTermForm = TermForm.Literal,
+                UseTrailingWildcardForAllWords = true
+            });
+
+            var actual = query.Transform("abc and (def or ghi)");
+
+            const string expected = "\"abc*\" AND (\"def*\" OR \"ghi*\")";
             Assert.AreEqual(expected, actual);
         }
 
@@ -157,9 +202,9 @@ namespace Fts.Test
                 DisabledPunctuation = new[] {'~', '-', '+', '<', '>'}
             });
 
-            var actual = query.Transform("\"dk product\" dkp <+dkp+123+> -ab-c ~def");
+            var actual = query.Transform("\"dk product\" dkp OR <+dkp+123+> -ab-c AND ~def*");
 
-            const string expected = "\"dk product\" AND \"dkp*\" AND \"<+dkp+123+>*\" AND \"-ab-c*\" AND \"~def*\"";
+            const string expected = "\"dk product\" AND \"dkp*\" OR \"<+dkp+123+>*\" AND \"-ab-c*\" AND \"~def*\"";
             Assert.AreEqual(expected, actual);
         }
 
