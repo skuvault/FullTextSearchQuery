@@ -179,6 +179,32 @@ namespace Fts.Test
 		}
 
 		[TestMethod]
+		public void QuotesAddedToWord_WhenQuotesEnabled()
+		{
+			var query = new FtsQuery(new FtsQuerySettings { EnabledPunctuation = new[] { '"' } });
+
+			var actual = query.Transform("\"dk product\" dkp123");
+
+			const string expected = "\"dk product\" AND FORMSOF(INFLECTIONAL, dkp123)";
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		public void ParenthesesParsedAsPunctuation_WhenParenthesesEnabledInSettings()
+		{
+			var query = new FtsQuery(new FtsQuerySettings
+			{
+				UseInflectionalSearch = false,
+				EnabledPunctuation = new[] { '(' }
+			});
+
+			var actual = query.Transform("abc and (def or ghi)");
+
+			const string expected = "\"abc\" AND (\"def\" OR \"ghi\")";
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
 		public void AdditionalStopWordsUsed_WhenStandardStopWordsDisabled()
 		{
 			var additionalStopWords = new[] { "aa", "bb", "cc" };

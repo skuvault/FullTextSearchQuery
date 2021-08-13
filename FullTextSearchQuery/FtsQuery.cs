@@ -92,6 +92,15 @@ namespace SoftCircuits.FullTextSearchQuery
             foreach (string stopWord in settings.AdditionalStopWords)
                 StopWords.Add(stopWord);
 
+            if (_settings.EnabledPunctuation.Any())
+            {
+                Punctuation = string.Empty;
+                foreach (var enabledChar in _settings.EnabledPunctuation)
+                {
+                    Punctuation += enabledChar.ToString();
+                }
+            }
+
             foreach (var disabledChar in _settings.DisabledPunctuation)
             {
                 Punctuation = Punctuation.Replace(disabledChar.ToString(), string.Empty);

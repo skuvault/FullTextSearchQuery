@@ -39,12 +39,23 @@ namespace SoftCircuits.FullTextSearchQuery
 		public bool TreatNearAsOperator { get; set; } = true;
 
 		/// <summary>
+		/// Enabled punctuation chars. If not empty then default list will be replaced with this one.
+		/// </summary>
+		/// <remarks>
+		/// Default punctuation chars:<![CDATA[~"`!@#$%^&*()-+=[]{}\|;:,.<>?/]]>
+		/// </remarks>
+		public char[] EnabledPunctuation { get; set; } = Array.Empty<char>();
+
+		/// <summary>
 		/// Disable punctuation chars.
 		/// </summary>
+		/// <remarks>
+		/// Default punctuation chars:<![CDATA[~"`!@#$%^&*()-+=[]{}\|;:,.<>?/]]>
+		/// </remarks>
 		public char[] DisabledPunctuation { get; set; } = Array.Empty<char>();
 
 		/// <summary>
-		/// Add additional stopwords
+		/// Add additional stopwords.
 		/// </summary>
 		public string[] AdditionalStopWords { get; set; } = Array.Empty<string>();
 	}
@@ -55,6 +66,6 @@ namespace SoftCircuits.FullTextSearchQuery
 	public enum DefaultConjunctionType
 	{
 		And,
-		Or,
+		Or
 	}
 }
