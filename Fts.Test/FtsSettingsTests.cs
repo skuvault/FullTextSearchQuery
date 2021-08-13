@@ -76,9 +76,9 @@ namespace Fts.Test
 		}
 
 		[TestMethod]
-		public void NearIsNotParsedAsPunctuation_WhenItsDisabledInSettings()
+		public void NearIsNotParsedAsOperator_WhenItsDisabledInSettings()
 		{
-			var query = new FtsQuery(new FtsQuerySettings { DisableNear = true });
+			var query = new FtsQuery(new FtsQuerySettings { TreatNearAsOperator = false });
 
 			var actual = query.Transform("\"abc\" NEAR \"def\"");
 

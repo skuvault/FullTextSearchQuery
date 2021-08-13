@@ -10,7 +10,7 @@ namespace SoftCircuits.FullTextSearchQuery
 		public bool AddStandardStopWords { get; set; }
 
 		/// <summary>
-		/// Default conjunction between parsed words. Possible values: And, Or
+		/// Default conjunction between parsed words. Possible values: And, Or.
 		/// </summary>
 		public DefaultConjunctionType DefaultConjunction { get; set; } = DefaultConjunctionType.And;
 
@@ -25,14 +25,18 @@ namespace SoftCircuits.FullTextSearchQuery
 		public bool UseInflectionalSearch { get; set; } = true;
 
 		/// <summary>
-		/// Add trailing wildcard for every parsed word.
+		/// Add trailing wildcard for every parsed word to search by the beginning of words.
 		/// </summary>
 		public bool UseTrailingWildcardForAllWords { get; set; }
 
 		/// <summary>
-		/// Disable parsing near and treat it as word.
+		/// Treat <b>NEAR</b> term as operator.
 		/// </summary>
-		public bool DisableNear { get; set; }
+		/// <remarks>
+		/// See more about FTS NEAR operator
+		/// <a href="http://docs.microsoft.com/en-us/sql/relational-databases/search/search-for-words-close-to-another-word-with-near">here.</a>
+		/// </remarks>
+		public bool TreatNearAsOperator { get; set; } = true;
 
 		/// <summary>
 		/// Disable punctuation chars.

@@ -230,7 +230,7 @@ namespace SoftCircuits.FullTextSearchQuery
                         conjunction = ConjunctionType.And;
                     else if (comparer.Compare(term, "OR") == 0)
                         conjunction = ConjunctionType.Or;
-                    else if (!_settings.DisableNear && comparer.Compare(term, "NEAR") == 0)
+                    else if (_settings.TreatNearAsOperator && comparer.Compare(term, "NEAR") == 0)
                         conjunction = ConjunctionType.Near;
                     else if (comparer.Compare(term, "NOT") == 0)
                         termExclude = true;
