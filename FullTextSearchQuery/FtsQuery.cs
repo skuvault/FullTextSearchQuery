@@ -21,7 +21,7 @@ namespace SoftCircuits.FullTextSearchQuery
     /// <summary>
     /// Term conjunction types.
     /// </summary>
-    public enum ConjunctionType
+    internal enum ConjunctionType
     {
         And,
         Or,
@@ -125,7 +125,7 @@ namespace SoftCircuits.FullTextSearchQuery
         /// if a valid condition was not possible.</returns>
         public string Transform(string query)
         {
-            INode? node = ParseNode(query, _settings.DefaultConjunction);
+            INode? node = ParseNode(query, (ConjunctionType)_settings.DefaultConjunction);
             node = FixUpExpressionTree(node, true);
             return node?.ToString() ?? string.Empty;
         }

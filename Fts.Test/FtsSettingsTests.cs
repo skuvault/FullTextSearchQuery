@@ -9,7 +9,7 @@ namespace Fts.Test
 		[TestMethod]
 		public void WordsJoinedWithOr_WhenSettingTurnedOn()
 		{
-			var query = new FtsQuery(new FtsQuerySettings { DefaultConjunction = ConjunctionType.Or });
+			var query = new FtsQuery(new FtsQuerySettings { DefaultConjunction = DefaultConjunctionType.Or });
 
 			var actual = query.Transform("\"dk product\" dkp dkp123");
 
@@ -151,7 +151,7 @@ namespace Fts.Test
 		{
 			var query = new FtsQuery(new FtsQuerySettings
 			{
-				DefaultConjunction = ConjunctionType.Or,
+				DefaultConjunction = DefaultConjunctionType.Or,
 				UseTrailingWildcardForAllWords = true
 			});
 
@@ -166,7 +166,7 @@ namespace Fts.Test
 		{
 			var query = new FtsQuery(new FtsQuerySettings
 			{
-				DefaultConjunction = ConjunctionType.And,
+				DefaultConjunction = DefaultConjunctionType.And,
 				DefaultTermForm = TermForm.Literal,
 				UseTrailingWildcardForAllWords = true,
 				DisabledPunctuation = new[] { '~', '-', '+', '<', '>' }
