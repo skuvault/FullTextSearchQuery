@@ -31,7 +31,7 @@ namespace Fts.Test
 		[TestMethod]
 		public void InflectionalSearchIsNotUsed_WhenDefaultTermFormIsLiteral()
 		{
-			var query = new FtsQuery(new FtsQuerySettings { DefaultTermForm = TermForm.Literal });
+			var query = new FtsQuery(new FtsQuerySettings { UseInflectionalSearch = false });
 
 			Assert.AreEqual("\"abc\"", query.Transform("abc"));
 
@@ -91,7 +91,7 @@ namespace Fts.Test
 		{
 			var query = new FtsQuery(new FtsQuerySettings
 			{
-				DefaultTermForm = TermForm.Literal,
+				UseInflectionalSearch = false,
 				UseTrailingWildcardForAllWords = true
 			});
 
@@ -106,7 +106,7 @@ namespace Fts.Test
 		{
 			var query = new FtsQuery(new FtsQuerySettings
 			{
-				DefaultTermForm = TermForm.Literal,
+				UseInflectionalSearch = false,
 				UseTrailingWildcardForAllWords = true
 			});
 
@@ -121,7 +121,7 @@ namespace Fts.Test
 		{
 			var query = new FtsQuery(new FtsQuerySettings
 			{
-				DefaultTermForm = TermForm.Literal,
+				UseInflectionalSearch = false,
 				UseTrailingWildcardForAllWords = true
 			});
 
@@ -136,7 +136,7 @@ namespace Fts.Test
 		{
 			var query = new FtsQuery(new FtsQuerySettings
 			{
-				DefaultTermForm = TermForm.Literal,
+				UseInflectionalSearch = false,
 				UseTrailingWildcardForAllWords = true
 			});
 
@@ -167,7 +167,7 @@ namespace Fts.Test
 			var query = new FtsQuery(new FtsQuerySettings
 			{
 				DefaultConjunction = DefaultConjunctionType.And,
-				DefaultTermForm = TermForm.Literal,
+				UseInflectionalSearch = false,
 				UseTrailingWildcardForAllWords = true,
 				DisabledPunctuation = new[] { '~', '-', '+', '<', '>' }
 			});

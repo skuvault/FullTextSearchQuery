@@ -5,7 +5,7 @@ namespace SoftCircuits.FullTextSearchQuery
 	public class FtsQuerySettings
 	{
 		/// <summary>
-		/// If true, the standard list of FTS stopwords are added to the stopword list.
+		/// If true, then standard list of FTS stopwords are added to the stopword list.
 		/// </summary>
 		public bool AddStandardStopWords { get; set; }
 
@@ -15,9 +15,14 @@ namespace SoftCircuits.FullTextSearchQuery
 		public DefaultConjunctionType DefaultConjunction { get; set; } = DefaultConjunctionType.And;
 
 		/// <summary>
-		/// Default TermForm for parsed words.
+		/// Use inflectional search or search by exact term by default.
 		/// </summary>
-		public TermForm DefaultTermForm { get; set; } = TermForm.Inflectional;
+		/// <remarks>
+		/// Inflectional finds all of the tenses of a word.
+		/// For example, if you passed in Start, Inflectional will find Start, Started, and Starting.
+		/// For nouns, Inflectional finds the single, plural, and possessive forms.
+		/// </remarks>
+		public bool UseInflectionalSearch { get; set; } = true;
 
 		/// <summary>
 		/// Add trailing wildcard for every parsed word.

@@ -11,7 +11,7 @@ namespace SoftCircuits.FullTextSearchQuery
     /// <summary>
     /// Query term forms.
     /// </summary>
-    public enum TermForm
+    internal enum TermForm
     {
         Inflectional,
         Thesaurus,
@@ -140,7 +140,7 @@ namespace SoftCircuits.FullTextSearchQuery
         internal INode? ParseNode(string? query, ConjunctionType defaultConjunction)
         {
             ConjunctionType conjunction = defaultConjunction;
-            TermForm termForm = _settings.DefaultTermForm;
+            TermForm termForm = _settings.UseInflectionalSearch ? TermForm.Inflectional : TermForm.Literal;
             bool termExclude = false;
             bool resetState = true;
             INode? root = null;
@@ -154,7 +154,7 @@ namespace SoftCircuits.FullTextSearchQuery
                 {
                     // Reset modifiers
                     conjunction = defaultConjunction;
-                    termForm = _settings.DefaultTermForm;
+                    termForm = _settings.UseInflectionalSearch ? TermForm.Inflectional : TermForm.Literal;
                     termExclude = false;
                     resetState = false;
                 }
