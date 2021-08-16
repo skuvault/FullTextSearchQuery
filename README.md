@@ -1,7 +1,9 @@
 # FullTextSearchQuery
 
+[![NuGet version (SoftCircuits.FullTextSearchQuery)](https://img.shields.io/nuget/v/SoftCircuits.FullTextSearchQuery.svg?style=flat-square)](https://www.nuget.org/packages/SoftCircuits.FullTextSearchQuery/)
+
 ```
-Install-Package SkuVault.FullTextSearchQuery
+Install-Package SoftCircuits.FullTextSearchQuery
 ```
 
 FullTextSearchQuery is a .NET class library that converts a user-friendly search term into a valid Microsoft SQL Server full-text-search query. The code attempts to detect and handle all cases where the query would otherwise cause SQL Server to generate an error.
@@ -96,9 +98,6 @@ JOIN sys.fulltext_languages slg
 ON slg.lcid = ssw.language_id
 WHERE slg.lcid = 1033
 ```
-
-# Fork changes
-The main changes in this fork related to adding FtsQuerySettings to configure this library. It allows us to enable or disable functions of this library.
 
 # More Information
 For more information and a discussion of the code, please see my article [Easy Full-Text Search Queries](http://www.blackbeltcoder.com/Articles/data/easy-full-text-search-queries).
