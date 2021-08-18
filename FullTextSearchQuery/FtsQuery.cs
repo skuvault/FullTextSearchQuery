@@ -11,7 +11,7 @@ namespace SoftCircuits.FullTextSearchQuery
     /// <summary>
     /// Query term forms.
     /// </summary>
-    public enum TermForm
+    internal enum TermForm
     {
         Inflectional,
         Thesaurus,
@@ -21,7 +21,7 @@ namespace SoftCircuits.FullTextSearchQuery
     /// <summary>
     /// Term conjunction types.
     /// </summary>
-    public enum ConjunctionType
+    internal enum ConjunctionType
     {
         And,
         Or,
@@ -92,6 +92,15 @@ namespace SoftCircuits.FullTextSearchQuery
             foreach (string stopWord in settings.AdditionalStopWords)
                 StopWords.Add(stopWord);
 
+            if (_settings.EnabledPunctuation.Any())
+            {
+                Punctuation = string.Empty;
+                foreach (var enabledChar in _settings.EnabledPunctuation)
+                {
+                    Punctuation += enabledChar.ToString();
+                }
+            }
+
             foreach (var disabledChar in _settings.DisabledPunctuation)
             {
                 Punctuation = Punctuation.Replace(disabledChar.ToString(), string.Empty);
@@ -125,7 +134,7 @@ namespace SoftCircuits.FullTextSearchQuery
         /// if a valid condition was not possible.</returns>
         public string Transform(string query)
         {
-            INode? node = ParseNode(query, _settings.DefaultConjunction);
+            INode? node = ParseNode(query, (ConjunctionType)_settings.DefaultConjunction);
             node = FixUpExpressionTree(node, true);
             return node?.ToString() ?? string.Empty;
         }
@@ -140,7 +149,7 @@ namespace SoftCircuits.FullTextSearchQuery
         internal INode? ParseNode(string? query, ConjunctionType defaultConjunction)
         {
             ConjunctionType conjunction = defaultConjunction;
-            TermForm termForm = _settings.DefaultTermForm;
+            TermForm termForm = _settings.UseInflectionalSearch ? TermForm.Inflectional : TermForm.Literal;
             bool termExclude = false;
             bool resetState = true;
             INode? root = null;
@@ -154,7 +163,7 @@ namespace SoftCircuits.FullTextSearchQuery
                 {
                     // Reset modifiers
                     conjunction = defaultConjunction;
-                    termForm = _settings.DefaultTermForm;
+                    termForm = _settings.UseInflectionalSearch ? TermForm.Inflectional : TermForm.Literal;
                     termExclude = false;
                     resetState = false;
                 }
@@ -230,7 +239,7 @@ namespace SoftCircuits.FullTextSearchQuery
                         conjunction = ConjunctionType.And;
                     else if (comparer.Compare(term, "OR") == 0)
                         conjunction = ConjunctionType.Or;
-                    else if (!_settings.DisableNear && comparer.Compare(term, "NEAR") == 0)
+                    else if (_settings.TreatNearAsOperator && comparer.Compare(term, "NEAR") == 0)
                         conjunction = ConjunctionType.Near;
                     else if (comparer.Compare(term, "NOT") == 0)
                         termExclude = true;
